@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Employee List</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <h3 class="text-center mb-4 mt-5">Employee List</h3>
+
+    <div class="container">
+        <div class="row mb-3">
+          <div class="col text-end">
+            <a href="/form" class="btn btn-primary">Add Employee</a>
+          </div>
+        </div>
+    </div>
+
+    <!-- Centered table container with responsiveness -->
+    <div id="employeeTableContainer" class="table-responsive m-5">
+      <table class="table table-bordered table-striped text-center align-middle" style="border: 2px solid black;">
+        <thead class="align-middle">
+          <tr>
+            <th>Employee ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Gender</th>
+            <th>Date of Birth</th>
+            <th>Mobile Number</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>Joining Date</th>
+          </tr>
+        </thead>
+        <tbody id="employeeTableBody">
+          <!-- Data will be dynamically added here -->
+        </tbody>
+      </table>
+    </div>
+
+  <script>
+    async function fetchEmployees() {
+      const response = await fetch("/employees");
+      if (response.ok) {
+        const data = await response.json();
+        const tableBody = document.getElementById("employeeTableBody");
+
+        if (data.length > 0) {
+          data.forEach(emp => {
+            const row = document.createElement("tr");
+            Object.values(emp).forEach(val => {
+              const cell = row.insertCell();
+              cell.textContent = val;
+            });
+            tableBody.appendChild(row);
+          });
+        } else {
+          const row = document.createElement("tr");
+          const cell = row.insertCell();
+          cell.colSpan = 9; // Span across all columns
+          cell.textContent = "No employees found.";
+          tableBody.appendChild(row);
+        }
+      } else {
+        alert("Failed to fetch employee data.");
+      }
+    }
+
+    fetchEmployees();
+  </script>
+</body>
+</html>
